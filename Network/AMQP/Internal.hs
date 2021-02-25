@@ -722,6 +722,7 @@ openChannel c = do
         newChannelID <- allocateChannel (connChanAllocator c)
         let newChannel = Channel c newInQueue outRes (fromIntegral newChannelID) lastConsTag nxtSeq unconfSet aSet nSet ca closed conss retListeners cnfListeners handlers
         thrID <- forkFinally' (channelReceiver newChannel) $ \res -> do
+                   putStrLn $ "Auto-closing the channel because we got: " <> show res
                    closeChannel' newChannel Normal "closed"
                    case res of
                      Right _ -> return ()
